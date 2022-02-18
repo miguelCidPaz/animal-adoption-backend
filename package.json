@@ -1,0 +1,22 @@
+{
+  "name": "animal-adoption-backend",
+  "version": "1.0.0",
+  "description": "A project to make easier the animal adoption process.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josemsb92/animal-adoption-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josemsb92/animal-adoption-backend/issues"
+  },
+  "homepage": "https://github.com/josemsb92/animal-adoption-backend#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  }
+}
