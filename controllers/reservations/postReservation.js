@@ -1,9 +1,13 @@
-const data = require('../../data.json');
+const reservationManager = require("../../managers/resevationManager");
+const adoptersManager = require("../../managers/adoptersManager");
 
 function postReservation(req, res) {
-    reservation = reservationManager.addReservation(req.params.body.reservation);  /*????*/
-    adopter = adoptersManager.addAdopter(req.params.body.adopter);
-    res.status(201).json();
+  reservation = reservationManager.createReservation(req.body.reservation);
+
+  /* no se si es solo req.body o????*/
+
+  adopter = adoptersManager.createAdopter(req.body.adopter);
+  res.status(201).json();
 }
 
-module.exports = getMealById;
+module.exports = postReservation;

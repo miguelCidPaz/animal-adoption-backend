@@ -1,8 +1,8 @@
-const data = require('../../data.json');
+const petsManager = require("../../managers/petsManager");
 
 function getPets(req, res) {
-    pets = petsManager.getAllPets();    
-    res.status(200).json(pets);
+  pets = petsManager.getAllPets();
+  res.status(200).json(pets);
 }
 
 module.exports = getPets;
