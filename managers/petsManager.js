@@ -1,9 +1,11 @@
+const adoptionClient = require('./conection')
 class PetsManager {
   /*{name:pepe, dni:123} */
   /*name=pepe AND */
   /*dni=123 AND */
   getAllPets() {
     pets = adoptionClient.query(`SELECT * FROM Pets;`);
+    console.log(pets)
     return pets.map((pet) => new Pet(pet));
   }
 
