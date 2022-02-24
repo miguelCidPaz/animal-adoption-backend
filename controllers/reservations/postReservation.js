@@ -3,10 +3,8 @@ const adoptersManager = require("../../managers/adoptersManager");
 
 function postReservation(req, res) {
   reservation = reservationManager.createReservation(req.body.reservation);
-
-  /* no se si es solo req.body o????*/
-
   adopter = adoptersManager.createAdopter(req.body.adopter);
+  console.log(req.body);
   res.status(201).json();
 }
 

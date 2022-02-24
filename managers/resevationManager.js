@@ -1,11 +1,14 @@
+//const adoptionClient = require('./conection');
+// class extends in connection
 class ReservationManager {
-  createReservation() {
-    reservation = adoptionClient.query(
+  static async createReservation() {
+    reservation = await adoptionClient.query(
       `INSERT INTO state_adoption VALUES(id, idPets, idAdopter, adoptionStatus)`
     );
-    new reservation(reservation);
+    return new reservation(reservation);
   }
 
+ 
   /* 
   getByCriteria(criteria = {}) {
     adopters = adoptionClient.query(
