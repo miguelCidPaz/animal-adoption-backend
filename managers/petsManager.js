@@ -1,4 +1,4 @@
-
+const adoptionClient = require('./conection')
 class PetsManager {
   /*{name:pepe, dni:123} */
   /*name=pepe AND */

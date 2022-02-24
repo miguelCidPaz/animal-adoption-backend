@@ -1,4 +1,5 @@
-var app = require("express")();
+const express = require('express');
+const app = express()
 port = 3000;
 
 app.use(require('express').json());
