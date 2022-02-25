@@ -5,7 +5,7 @@ class ReservationManager {
     reservation = await adoptionClient.query(
       `INSERT INTO state_adoption VALUES(id, idPets, idAdopter, adoptionStatus)`
     );
-    return new reservation(reservation);
+    return new Reservation(reservation);
   }
 
  

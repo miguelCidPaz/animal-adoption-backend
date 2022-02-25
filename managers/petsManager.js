@@ -1,15 +1,18 @@
-const adoptionClient = require('./conection')
+const adoptionClient = require('./conection');
+const Pet = require('../models/pet')
 class PetsManager {
   /*{name:pepe, dni:123} */
   /*name=pepe AND */
   /*dni=123 AND */
   static async getAllPets() {
-    pets = await adoptionClient.query(`SELECT * FROM Pets;`);
-    return pets.map((pet) => new Pet(pet));
+    const pets = await adoptionClient.query(`SELECT * FROM Pets;`)
+    console.log(pets.rows, 'hola');
+    let info = pets.rows;
+    return info.map((pet) => new Pet(pet));
   }
 
   static async getbyId(id) {
-    pet = await adoptionClient.query(`SELECT * FROM Pets WHERE id =${id};`);
+    const pet = await adoptionClient.query(`SELECT * FROM Pets WHERE id =${id};`);
     console.log(pet);
     return pet.map((pet) => new Pet(pet)) // Esto nos crea una copia o nos busca el del id ¿?¿?¿?¿ => JOSEMI !!
   }
@@ -27,7 +30,7 @@ class PetsManager {
       
     /* Y esto nos lo dejaría asi no? => ['name'='pepe'] AND ['dni', 123] ] */
 
-    pets = adoptionClient.query(
+    const pets = adoptionClient.query(
       `SELECT * FROM Adopters WHERE ${stringifiedObj};`
     );
     return pets.map((pet) => new Pet(pet));

@@ -1,7 +1,8 @@
 const petsManager = require("../../managers/petsManager");
 
-function getPets(req, res) {
-  pets = petsManager.getAllPets();
+async function getPets(req, res) {
+  const pets =  await petsManager.getAllPets();
+  console.log(pets)
   res.status(200).json(pets);
 }
 
