@@ -6,15 +6,20 @@ class PetsManager {
   /*dni=123 AND */
   static async getAllPets() {
     const pets = await adoptionClient.query(`SELECT * FROM Pets;`)
-    console.log(pets.rows, 'hola');
-    let info = pets.rows;
-    return info.map((pet) => new Pet(pet));
+    //Por qué es necesario hacer un new Pet() para un get???
+    // const info = pets.rows
+    // return info.map(
+    //   (pet) => new Pet(pet));
+    return pets.rows
   }
 
-  static async getbyId(id) {
-    const pet = await adoptionClient.query(`SELECT * FROM Pets WHERE id =${id};`);
-    console.log(pet);
-    return pet.map((pet) => new Pet(pet)) // Esto nos crea una copia o nos busca el del id ¿?¿?¿?¿ => JOSEMI !!
+  static async getById(id) {
+  const pet = await adoptionClient.query(`SELECT * FROM Pets WHERE id =${id};`)
+    if(pet.rows[0]){
+      return pet.rows
+    }else( console.log("NOT FOUND"))
+    
+     // Esto nos crea una copia o nos busca el del id ¿?¿?¿?¿ => JOSEMI !!
   }
 
   static getByCriteria(criteria = {}) { // varios filtros
@@ -33,6 +38,7 @@ class PetsManager {
     const pets = adoptionClient.query(
       `SELECT * FROM Adopters WHERE ${stringifiedObj};`
     );
+    //Por qué es necesario hacer un new Pet() para un get???
     return pets.map((pet) => new Pet(pet));
   }
 }
