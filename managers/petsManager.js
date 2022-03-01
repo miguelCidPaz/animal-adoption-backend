@@ -14,11 +14,9 @@ class PetsManager {
   }
 
   static async getById(id) {
-  const pet = await adoptionClient.query(`SELECT * FROM Pets WHERE id =${id};`)
-    if(pet.rows[0]){
-      return pet.rows
-    }else( console.log("NOT FOUND"))
+  const pet = await adoptionClient.query(`SELECT * FROM Pets WHERE id =${id};`)  
     
+      return pet.rows    
      // Esto nos crea una copia o nos busca el del id ¿?¿?¿?¿ => JOSEMI !!
   }
 
