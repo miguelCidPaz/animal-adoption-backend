@@ -2,10 +2,11 @@
 class AdoptersManager {
   
   static async createAdopter() {
-    adopter = await adoptionClient.query(
+    const adopter = await adoptionClient.query(
       `INSERT INTO Adopters VALUES(id, name, address, age, personalId, stateAdoptionId)`
     );
-    return new Adopter(adopter);
+    console.log(adopter);
+    //return new Adopter(adopter);
   }
   // getByCriteria(criteria = {}) {
   //   adopters = adoptionClient.query(
