@@ -40,15 +40,28 @@ class PetsManager {
 
     let sql = ''
     const valuesCriteria = []
-
-    Object.entries(criteria).forEach(([key, value], index) => {          
-       sql += `${key} = $${index+1}::text `
-        valuesCriteria.push(value)        
+    const lastEntry = (Object.entries(criteria).length-1); 
+    Object.entries(criteria).forEach(([key, value], index) => { 
+       if(lastEntry > index){         
+         console.log("DENTRO");
+         
+        sql += `${key} = $${index+1}::text AND `
+        valuesCriteria.push(value) 
+        console.log(valuesCriteria);
+       }else{        
+         console.log("FUERA");
+         
+       
+        sql += `${key} = $${index+1}::text `
+        valuesCriteria.push(value) 
+        console.log(valuesCriteria)
+       }     
+              
     })   
    
     const pets = await adoptionClient.query(
       `SELECT * FROM Pets WHERE ${sql}`,
-      [...valuesCriteria]
+      [valuesCriteria]
     );    
     //Por qué es necesario hacer un new Pet() para un get???
     const info = pets.rows[0];
