@@ -1,9 +1,9 @@
 
 class AdoptersManager {
   
-  static async createAdopter() {
+  static async createAdopter(body) {
     const adopter = await adoptionClient.query(
-      `INSERT INTO Adopters VALUES(id, name, address, age, personalId, stateAdoptionId)`
+      `INSERT INTO Adopters VALUES(${body.name}, ${body.address}, ${body.age}, ${body.personalId}, ${stateAdoptionId})` //id?
     );
     console.log(adopter);
     //return new Adopter(adopter);

@@ -3,7 +3,7 @@
 class ReservationManager {
   static async createReservation() {
     reservation = await adoptionClient.query(
-      `INSERT INTO state_adoption VALUES(id, idPets, idAdopter, adoptionStatus)`
+      `INSERT INTO state_adoption VALUES(${idPets}, ${idAdopter}, ${adoptionStatus})` //id?
     );
     return new Reservation(reservation);
   }
