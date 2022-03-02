@@ -11,3 +11,4 @@ class Reservation {
     this.adoptionStatus = props.adoptionStatus;
   }
 }
+module.exports = Reservation;
