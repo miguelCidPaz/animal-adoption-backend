@@ -27,7 +27,7 @@ class PetsManager {
   static async getByCriteria(criteria = {}) {
     // varios filtros
     /* ejemplo criteria = {name:pepe, dni:123} */
-    console.log(criteria, "Criteria primero");
+
     // const stringifiedObj = Object.entries(criteria).map((x) => x.join("=")).join("AND");
     // console.log(stringifiedObj, "Criteria stringified");
     /*Dividimos el objeto en una matriz de pequeñas matrices de parámetros => 
@@ -38,35 +38,23 @@ class PetsManager {
 
     /* Y esto nos lo dejaría asi no? => ['name'='pepe'] AND ['dni', 123] ] */
 
-    let sql = ''
-    const valuesCriteria = []
-    const lastEntry = (Object.entries(criteria).length-1); 
-    Object.entries(criteria).forEach(([key, value], index) => { 
-       if(lastEntry > index){         
-         console.log("DENTRO");
-         
-        sql += `${key} = $${index+1}::text AND `
-        valuesCriteria.push(value) 
-        console.log(valuesCriteria);
-       }else{        
-         console.log("FUERA");
-         
-       
-        sql += `${key} = $${index+1}::text `
-        valuesCriteria.push(value) 
-        console.log(valuesCriteria)
-       }     
-              
-    })   
-   
-    const pets = await adoptionClient.query(
-      `SELECT * FROM Pets WHERE ${sql}`,
-      [valuesCriteria]
-    );    
+    let sql = "";
+    const lastEntry = Object.entries(criteria).length - 1;
+    Object.entries(criteria).forEach(([key, value], index) => {
+      if (lastEntry > index) {
+        sql += `${key} = '${value}' AND `;
+      } else {
+        sql += `${key} = '${value}' `;
+      }
+    });
+    const pets = await adoptionClient.query(`SELECT * FROM Pets WHERE ${sql}`);
+
     //Por qué es necesario hacer un new Pet() para un get???
-    const info = pets.rows[0];
+    const info = pets.rows;
     if (info) {
-      return new Pet(info);
+      return info.map((petData) => {
+        return new Pet(petData);
+      });
     } else {
       return undefined;
     }
