@@ -2,8 +2,8 @@ class Pet {
   id;
   size;
   gender;
-  weightKg;
-  rescuedAt;
+  weightkg;
+  rescuedat;
   birthday;
   species;
   reservationDate; 
@@ -15,8 +15,8 @@ class Pet {
     this.name = props.name;    
     this.size = props.size;
     this.gender = props.gender;
-    this.weightKg = props.weightKg;
-    this.rescuedAt = props.rescuedAt;
+    this.weightkg = props.weightkg;
+    this.rescuedat = props.rescuedat;
     this.birthday = props.birthday;
     this.species = props.species;
     this.reservationDate = props.reservationDate;

@@ -38,16 +38,23 @@ class PetsManager {
 
     /* Y esto nos lo dejaría asi no? => ['name'='pepe'] AND ['dni', 123] ] */
 
-    let sql = "";
+    let sql = "";    
     const lastEntry = Object.entries(criteria).length - 1;
     Object.entries(criteria).forEach(([key, value], index) => {
+      let operator = "=";
+      if (key.includes(".")) {
+        let symbol = key.slice(key.indexOf(".") + 1, key.length); //5.gt > 3.lt
+        operator = symbol == "gt" ? ">=" : "<=";
+        key = key.slice(0, key.indexOf("."));
+      }
       if (lastEntry > index) {
-        sql += `${key} = '${value}' AND `;
+        sql += `${key} ${operator} '${value}' AND `;
       } else {
-        sql += `${key} = '${value}' `;
+        sql += `${key} ${operator} '${value}' `;
       }
     });
     const pets = await adoptionClient.query(`SELECT * FROM Pets WHERE ${sql}`);
+    // const pets = await adoptionClient.query(`SELECT * FROM Pets WHERE weight < 1 AND weight `);
 
     //Por qué es necesario hacer un new Pet() para un get???
     const info = pets.rows;
