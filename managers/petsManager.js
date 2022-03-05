@@ -1,19 +1,34 @@
 const adoptionClient = require("./conection");
 const Pet = require("../models/pet");
 
+function createImagesArray(info) {
+  const newInfo = info.map((pet) => {
+    if (pet.images) {
+      const urlArray = pet.images.split(',');
+      const newPet = { ...pet, images: urlArray };
+      return newPet
+    } else {
+      return pet
+    }
+  }
+  )
+  return newInfo
+}
+
 class PetsManager {
   static async getAllPets() {
     const pets = await adoptionClient.query(`SELECT * FROM Pets;`);
-    const info = pets.rows;
-    return info.map((pet) => {
+    const formattedInfo = createImagesArray(pets.rows);
+    return formattedInfo.map((pet) => {
       return new Pet(pet);
     });
   }
-
   static async getById(id) {
+    console.log(id);
     const pet = await adoptionClient.query(
       `SELECT * FROM Pets WHERE id = ${id};`
     );
+    console.log(pet.rows);
     const info = pet.rows[0];
     if (info) {
       return new Pet(info);
@@ -23,7 +38,7 @@ class PetsManager {
   }
 
   static async getByCriteria(criteria = {}) {
-    let sql = "";    
+    let sql = "";
     const lastEntry = Object.entries(criteria).length - 1;
 
     Object.entries(criteria).forEach(([key, value], index) => {
