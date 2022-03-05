@@ -26,7 +26,7 @@ class PetsManager {
   static async getById(id) {
     console.log(id);
     const pet = await adoptionClient.query(
-      `SELECT * FROM Pets WHERE id = ${id};`
+      `SELECT * FROM Pets WHERE id = '${id}';`
     );
     console.log(pet.rows);
     const info = pet.rows[0];
