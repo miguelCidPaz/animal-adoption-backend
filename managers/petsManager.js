@@ -10,8 +10,7 @@ function createImagesArray(info) {
     } else {
       return pet
     }
-  }
-  )
+  })
   return newInfo
 }
 
@@ -23,15 +22,14 @@ class PetsManager {
       return new Pet(pet);
     });
   }
+
   static async getById(id) {
-    console.log(id);
     const pet = await adoptionClient.query(
       `SELECT * FROM Pets WHERE id = '${id}';`
     );
-    console.log(pet.rows);
-    const info = pet.rows[0];
-    if (info) {
-      return new Pet(info);
+    const formattedInfo = createImagesArray(pet.rows);
+    if (formattedInfo) {
+      return new Pet(formattedInfo[0]);
     } else {
       return undefined;
     }
@@ -56,10 +54,9 @@ class PetsManager {
     });
 
     const pets = await adoptionClient.query(`SELECT * FROM Pets WHERE ${sql}`);
-    const info = pets.rows;
-
-    if (info) {
-      return info.map((petData) => {
+    const formattedInfo = createImagesArray(pets.rows);
+    if (formattedInfo) {
+      return formattedInfo.map((petData) => {
         return new Pet(petData);
       });
     } else {
