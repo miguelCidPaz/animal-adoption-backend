@@ -9,6 +9,7 @@ class Pet {
   reservationDate; 
   name;
   images;
+  description;
 
   constructor(props) {
     this.id = props.id;
@@ -21,6 +22,7 @@ class Pet {
     this.species = props.species;
     this.reservationDate = props.reservationDate;
     this.images = props.images;
+    this.description = props.description;
   }
 }
 module.exports = Pet;

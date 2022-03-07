@@ -4,7 +4,7 @@ class Adopter {
   adress;
   age;
   personalId;
-  stateAdoptionId;
+  //stateAdoptionId;
 
   constructor(props) {
     this.id = props.id;
@@ -12,7 +12,7 @@ class Adopter {
     this.adress = props.adress;
     this.age = props.age;
     this.personalId = props.personalId;
-    this.stateAdoptionId = props.stateAdoptionId;
+    //this.stateAdoptionId = props.stateAdoptionId;
   }
 }
 
