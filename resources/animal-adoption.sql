@@ -10,7 +10,8 @@ CREATE TABLE pets(
     species SMALLINT/1=DOG // 2=CAT/,
     reservationDate DATE,
     images VARCHAR(255), /url1.com, url2.com/
-    PRIMARY KEY (id),
+    description varchar(255),
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE adopters (
@@ -19,7 +20,7 @@ CREATE TABLE adopters (
     address VARCHAR(255) NOT NULL,
     age INT NOT NULL,
     personalID VARCHAR(10) NOT NULL UNIQUE, /DNI/
-    PRIMARY KEY (id),
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE state_adoption (
