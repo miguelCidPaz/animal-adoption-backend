@@ -5,7 +5,7 @@ const Reservation = require("../models/reservation");
 class ReservationManager {
   static async createReservation(body) {
     const reservation = await adoptionClient.query(
-      `INSERT INTO state_adoption VALUES(${body.idPet}, ${body.idAdopter}, ${body.adoptionStatus})`
+      `INSERT INTO state_adoption VALUES(${req.params.id}, ${body.id}, ${ /* aqui poner el estado inicial body.adoptionStatus}*/}`
     );
     return new Reservation(reservation);
   }

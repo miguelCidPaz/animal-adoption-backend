@@ -2,12 +2,13 @@ const adoptionClient = require('./conection');
 const Adopter = require("../models/adopter");
 
 class AdoptersManager {
-  static async createAdopter(body) {      
-    const adopter = await adoptionClient.query(
-      `INSERT INTO Adopters VALUES(${body.name}, ${body.address}, ${body.age}, ${body.personalId})`
+  static async createAdopter(body) {  
+    const insertAdopterResponse = await adoptionClient.query(
+      `INSERT INTO adopters (name, address, age, personalid) VALUES('${body.name}', '${body.address}', '${body.age}', '${body.personalId}')`
     );
-   
-    return new Adopter(adopter);
+    const insertedAdopter = await adoptionClient.query(`SELECT * FROM adopters WHERE personalId='${body.personalId}'`)
+    console.log(insertedAdopter);
+    return new Adopter(insertedAdopter.rows);
   }
 }
 
