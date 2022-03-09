@@ -1,5 +1,5 @@
 var router = require('express').Router();
 
-router.post('/', require('../controllers/reservations/postReservation'));
+router.post('/:id', require('../controllers/reservations/postReservation'));
 
 module.exports = router;
