@@ -6,9 +6,9 @@ class Reservation {
 
   constructor(props) {
     this.id = props.id;
-    this.idPet = props.idPet;
-    this.idAdopter = props.idAdopter;
-    this.adoptionStatus = props.adoptionStatus;
+    this.idPet = props.idpet;
+    this.idAdopter = props.idadopter;
+    this.adoptionStatus = props.adoptionstatus;
   }
 }
 module.exports = Reservation;

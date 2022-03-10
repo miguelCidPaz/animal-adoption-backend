@@ -1,40 +1,69 @@
 const adoptionClient = require("./conection");
 const Reservation = require("../models/reservation");
-// class extends in connection
+
+const databaseKeys = {
+  reserved: 1,
+};
+
+function format(info) {
+  let newInfo = [];
+  if (info) {
+    info.map((reservation) => {
+      let newReservation = { ...reservation };
+      if (newReservation.adoptionstatus) {
+        newReservation.adoptionstatus === databaseKeys.reserved
+          ? (newReservation = { ...newReservation, adoptionstatus: "reserved" })
+          : (newReservation = { ...newReservation, adoptionstatus: "available" });
+      }
+      newInfo.push(newReservation);
+    });
+    return newInfo;
+  }
+}
 
 class ReservationManager {
   static async createReservation(body, petId) {
-    var reservation = "";
-    var adoptStatus = "";
-    var isAvailable = true;
+    let isPetAvailable = true;
+
     try {
-      adoptStatus = await adoptionClient.query(
+      const petStatusQuery = await adoptionClient.query(
         `SELECT adoptionStatus FROM state_adoption WHERE idpet = '${petId}'`
       );
-      if (adoptStatus.rows[0].adoptionstatus === 1) {
-        isAvailable = false;
+      if (petStatusQuery.rows[0].adoptionstatus === 1) {
+        isPetAvailable = false;
       }
     } catch (error) {
-      console.error(error);
+      throw (getReservation, error);
     }
-    // console.log(isAvailable);
 
-    // console.log(insertedAdopter.rows[0].id);
-    console.log(isAvailable);
-    if (isAvailable) {
-      console.log('se ejecuta este otro');
+    if (isPetAvailable) {
       const insertAdopterResponse = await adoptionClient.query(
         `SELECT * FROM adopters WHERE personalId='${body.personalId}'`
       );
       const idAdopter = insertAdopterResponse.rows[0].id;
-      console.log(idAdopter, "ID ADOPTER");
-      console.log(petId, "PET");
-      reservation = await adoptionClient.query(
+      const reservation = await adoptionClient.query(
         `INSERT INTO state_adoption (idpet, idadopter, adoptionstatus)VALUES('${petId}', '${idAdopter}', 1)`
       );
       return new Reservation(reservation);
-    } else return {"message":"Pet Not Available"};
+    } else return { message: "Pet Not Available" };
   }
+
+  static async getReservation(id) {
+    let getReservation;
+    try {
+      getReservation = await adoptionClient.query(
+        `SELECT * FROM state_adoption WHERE idpet = '${id}'`
+      );
+      if (getReservation.rows[0] === undefined) {
+        console.log("funciona");
+        return undefined;
+      }      
+      const formattedInfo = format(getReservation.rows);
+      return new Reservation(formattedInfo[0]);
+    } catch (error) {
+      throw(error);
+    }  
+  }  
 }
 
 module.exports = ReservationManager;
