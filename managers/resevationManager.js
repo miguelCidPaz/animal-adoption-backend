@@ -48,18 +48,19 @@ class ReservationManager {
     } else return { message: "Pet Not Available" };
   }
 
-  static async getReservation(id) {
+  static async getReservation() {
     let getReservation;
     try {
       getReservation = await adoptionClient.query(
-        `SELECT * FROM state_adoption WHERE idpet = '${id}'`
+        `SELECT * FROM state_adoption`
       );
       if (getReservation.rows[0] === undefined) {
         console.log("funciona");
         return undefined;
       }      
       const formattedInfo = format(getReservation.rows);
-      return new Reservation(formattedInfo[0]);
+     return formattedInfo.map((info => {return new Reservation(info)}))
+      
     } catch (error) {
       throw(error);
     }  
