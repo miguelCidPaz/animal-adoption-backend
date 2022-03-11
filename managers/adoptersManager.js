@@ -7,15 +7,16 @@ class AdoptersManager {
       const insertAdopterResponse = await adoptionClient.query(
         `INSERT INTO adopters (name, address, age, personalid) VALUES('${body.name}', '${body.address}', '${body.age}', '${body.personalId}')`
       );
+      console.log('crea el adopter');
     } catch (error) {
-      throw (insertAdopterResponse, error);
+      throw (error);
     }
 
     const insertedAdopter = await adoptionClient.query(
       `SELECT * FROM adopters WHERE personalId='${body.personalId}'`
     );
-
-    return new Adopter(insertedAdopter.rows);
+    console.log('tiene un nuevo adopter');
+    return new Adopter(insertedAdopter.rows[0]);
   }
 }
 
