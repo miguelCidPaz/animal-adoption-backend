@@ -42,7 +42,7 @@ function format(info) {
 class PetsManager {
   static async getAllPets() {
     const pets = await adoptionClient.query(`SELECT * FROM Pets;`);
-    const formattedInfo = format(pets.rows);
+    const formattedInfo = format(pets.rows);    
     return formattedInfo.map((pet) => {
       return new Pet(pet);
     });
