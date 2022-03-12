@@ -8,7 +8,6 @@ CREATE TABLE pets(
     rescuedAt DATE,
     birthday DATE,
     species SMALLINT/1=DOG // 2=CAT/,
-    reservationDate DATE,
     images VARCHAR(255), /url1.com, url2.com/
     description varchar(255),
     PRIMARY KEY (id)
@@ -19,7 +18,7 @@ CREATE TABLE adopters (
     name VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
     age INT NOT NULL,
-    personalID VARCHAR(10) NOT NULL UNIQUE, /DNI/
+    personalId VARCHAR(10) NOT NULL UNIQUE, /DNI/
     PRIMARY KEY (id)
 );
 
