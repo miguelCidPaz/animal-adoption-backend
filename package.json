@@ -1,6 +1,6 @@
 {
   "name": "animal-adoption-backend",
-  "version": "1.0.0",
+  "proxy": "http://localhost:3001",
   "description": "A project to make easier the animal adoption process.",
   "main": "index.js",
   "scripts": {
@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/josemsb92/animal-adoption-backend#readme",
   "dependencies": {
-    "express": "^4.17.3"
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "pg": "^8.7.3"
   }
 }
