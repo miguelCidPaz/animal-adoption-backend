@@ -39,8 +39,10 @@ class ReservationManager {
     }
     if (isPetAvailable) {
       const insertAdopterResponse = await adoptionClient.query(
-        `SELECT * FROM adopters WHERE personalId='${body.personalId}'`
+        `SELECT * FROM adopters WHERE personalid='${body.personalID}'`
       );
+      console.log('COMPROBANDO ID')
+      console.log(insertAdopterResponse)
       const idAdopter = insertAdopterResponse.rows[0].id;
       await adoptionClient.query(
         `INSERT INTO state_adoption (idpet, idadopter, adoptionstatus)VALUES('${petId}', '${idAdopter}', 1)`
@@ -59,16 +61,16 @@ class ReservationManager {
       getReservation = await adoptionClient.query(
         `SELECT * FROM state_adoption`
       );
-      if (getReservation.rows[0] === undefined) {
-        return undefined;
-      }      
+      /*       if (getReservation.rows[0] === undefined) {
+              return undefined;
+            } */
       const formattedInfo = format(getReservation.rows);
-     return formattedInfo.map((info => {return new Reservation(info)}))
-      
+      return formattedInfo.map((info => { return new Reservation(info) }))
+
     } catch (error) {
-      throw(error);
-    }  
-  }  
+      throw (error);
+    }
+  }
 }
 
 module.exports = ReservationManager;
