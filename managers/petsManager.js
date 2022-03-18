@@ -61,6 +61,7 @@ class PetsManager {
   }
 
   static async getByCriteria(criteria = {}) {
+    console.log('kkk')
     let sql = "";
     const lastEntry = Object.entries(criteria).length - 1;
 
