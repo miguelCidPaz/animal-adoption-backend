@@ -85,7 +85,6 @@ class PetsManager {
       criteria.name.charAt(0).toUpperCase();
       const normalizeName = criteria.name
       const query = `SELECT * FROM pets WHERE name='${normalizeName}'`
-      console.log('Query normalizado => ' + query)
       const pets = await adoptionClient.query(query)
       return pets.rows
     }
