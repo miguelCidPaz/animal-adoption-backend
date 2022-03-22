@@ -42,7 +42,7 @@ function format(info) {
 class PetsManager {
   static async getAllPets() {
     const pets = await adoptionClient.query(`SELECT * FROM Pets;`);
-    const formattedInfo = format(pets.rows);    
+    const formattedInfo = format(pets.rows);
     return formattedInfo.map((pet) => {
       return new Pet(pet);
     });
@@ -60,8 +60,30 @@ class PetsManager {
     }
   }
 
-  static async getByCriteria(criteria = {}) {
-    let sql = "";
+  static async getByCriteria(criteria) {
+
+    //Recogo todas las pets
+    const pets = await adoptionClient.query('SELECT * FROM pets');
+
+    //Las formateo
+    const formattedInfo = format(pets.rows);
+
+    //Divido los criterios para tratarlos uno por uno
+    const species = this.#getSpecies(criteria);
+    const sizes = this.#getSizes(criteria);
+    const weight = this.#getWeight(criteria);
+
+    const response = [];
+    for (let pet of formattedInfo) {
+      //Devolvera un boolean segun se cumplan estas especifidades
+      const specieAndSize = species.includes(pet.species) && sizes.includes(pet.size)
+      const andWeight = pet.weightkg >= weight[0] && pet.weightkg <= weight[1];
+      if (specieAndSize && andWeight) response.push(pet)
+    }
+
+    return response
+
+    /* let sql = "";
     const lastEntry = Object.entries(criteria).length - 1;
 
     Object.entries(criteria).forEach(([key, value], index) => {
@@ -86,7 +108,33 @@ class PetsManager {
       });
     } else {
       return undefined;
+    }*/
+  }
+
+  static #getSpecies(criteria) {
+    const selectedSpecies = [];
+    for (let condition of criteria) {
+      if (condition[0] === 'Dog' || condition[0] === 'Cat') selectedSpecies.push(condition[0])
     }
+    return selectedSpecies
+  }
+
+  static #getSizes(criteria) {
+    const selectedSizes = [];
+    for (let condition of criteria) {
+      if (condition[0] === 'Small' || condition[0] === 'Medium' || condition[0] === 'Large') selectedSizes.push(condition[0])
+    }
+    return selectedSizes
+  }
+
+  static #getWeight(criteria) {
+    let selectedWeight = []
+    for (let condition of criteria) {
+      if (Array.isArray(condition[1])) {
+        selectedWeight = condition[1]
+      }
+    }
+    return selectedWeight
   }
 }
 
