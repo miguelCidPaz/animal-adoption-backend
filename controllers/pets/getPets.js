@@ -7,6 +7,7 @@ async function getPets(req, res) {
     else res.status(404).end();
 
   } else {
+    console.log(req.query)
     const pets = await petsManager.getByCriteria(req.query);
     if (pets) {
       res.status(200).json(pets);

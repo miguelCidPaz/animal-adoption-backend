@@ -61,27 +61,36 @@ class PetsManager {
   }
 
   static async getByCriteria(criteria) {
+    if (Array.isArray(criteria)) {
+      //Recogo todas las pets
+      const pets = await adoptionClient.query('SELECT * FROM pets');
 
-    //Recogo todas las pets
-    const pets = await adoptionClient.query('SELECT * FROM pets');
+      //Las formateo
+      const formattedInfo = format(pets.rows);
 
-    //Las formateo
-    const formattedInfo = format(pets.rows);
+      //Divido los criterios para tratarlos uno por uno
+      const species = this.#getSpecies(criteria);
+      const sizes = this.#getSizes(criteria);
+      const weight = this.#getWeight(criteria);
 
-    //Divido los criterios para tratarlos uno por uno
-    const species = this.#getSpecies(criteria);
-    const sizes = this.#getSizes(criteria);
-    const weight = this.#getWeight(criteria);
-
-    const response = [];
-    for (let pet of formattedInfo) {
-      //Devolvera un boolean segun se cumplan estas especifidades
-      const specieAndSize = species.includes(pet.species) && sizes.includes(pet.size)
-      const andWeight = pet.weightkg >= weight[0] && pet.weightkg <= weight[1];
-      if (specieAndSize && andWeight) response.push(pet)
+      const response = [];
+      for (let pet of formattedInfo) {
+        //Devolvera un boolean segun se cumplan estas especifidades
+        const specieAndSize = species.includes(pet.species) && sizes.includes(pet.size)
+        const andWeight = pet.weightkg >= weight[0] && pet.weightkg <= weight[1];
+        if (specieAndSize && andWeight) response.push(pet)
+      }
+      return response
+    } else {
+      criteria.name.charAt(0).toUpperCase();
+      const normalizeName = criteria.name
+      const query = `SELECT * FROM pets WHERE name='${normalizeName}'`
+      console.log('Query normalizado => ' + query)
+      const pets = await adoptionClient.query(query)
+      return pets.rows
     }
 
-    return response
+
 
     /* let sql = "";
     const lastEntry = Object.entries(criteria).length - 1;
