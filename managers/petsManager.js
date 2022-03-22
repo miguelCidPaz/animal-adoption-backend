@@ -62,20 +62,20 @@ class PetsManager {
 
   static async getByCriteria(criteria) {
     if (Array.isArray(criteria)) {
-      //Recogo todas las pets
+      //😡I collect all the pets😡
       const pets = await adoptionClient.query('SELECT * FROM pets');
 
-      //Las formateo
+      //I format them☠️☠️☠️
       const formattedInfo = format(pets.rows);
 
-      //Divido los criterios para tratarlos uno por uno
+      //I divide the criteria to treat them one by one 😈😈😈
       const species = this.#getSpecies(criteria);
       const sizes = this.#getSizes(criteria);
       const weight = this.#getWeight(criteria);
 
       const response = [];
       for (let pet of formattedInfo) {
-        //Devolvera un boolean segun se cumplan estas especifidades
+        //Returns a boolean depending on whether these specifications are met 😙😙😙
         const specieAndSize = species.includes(pet.species) && sizes.includes(pet.size)
         const andWeight = pet.weightkg >= weight[0] && pet.weightkg <= weight[1];
         if (specieAndSize && andWeight) response.push(pet)
