@@ -31,3 +31,13 @@ CREATE TABLE state_adoption (
     FOREIGN KEY (idPet) REFERENCES pets(Id),
     FOREIGN KEY (idAdopter) REFERENCES adopters(Id)
 );
+
+CREATE TABLE rescuers (
+    idRescuer VARCHAR(100) NOT NULL,
+    idPet VARCHAR(100) NOT NULL,
+    phone VARCHAR(30),
+    email VARCHAR(100),
+    appreciations VARCHAR(255),
+    PRIMARY KEY (idRescuer),
+    FOREIGN KEY (idPet) REFERENCES pets(id),
+);
