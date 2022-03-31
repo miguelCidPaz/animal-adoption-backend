@@ -120,6 +120,20 @@ class PetsManager {
     }*/
   }
 
+  static async insertPet(data) {
+    const query = `INSERT INTO pets(name, size, gender, weightkg, rescuedat, birthday, species, images, description)
+    VALUES('${data.name}', '${data.size}', '${data.gender}', '${data.weightkg}', '${data.rescuedat}', '${data.birthday}', 
+    '${data.species}', '${data.images}', '${data.description}')`
+
+    try {
+      await adoptionClient.query(query);
+      return true
+    } catch (e) {
+      console.error(e)
+      return false
+    }
+  }
+
   static #getSpecies(criteria) {
     const selectedSpecies = [];
     for (let condition of criteria) {

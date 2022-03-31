@@ -6,14 +6,14 @@ class Pet {
   rescuedAt;
   birthday;
   species;
-  reservationDate; 
+  reservationDate;
   name;
   images;
   description;
 
   constructor(props) {
     this.id = props.id;
-    this.name = props.name;    
+    this.name = props.name;
     this.size = props.size;
     this.gender = props.gender;
     this.weightKg = props.weightkg;
