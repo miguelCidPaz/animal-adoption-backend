@@ -39,7 +39,7 @@ CREATE TABLE bailouts (
     phone VARCHAR(30),
     email VARCHAR(100),
     appreciations VARCHAR(255),
-    approbe SMALLINT,
+    approbe SMALLINT, /0=UNAUTHORIZED, 1=AUTHORIZED/
     PRIMARY KEY (idRescue),
     FOREIGN KEY (idPet) REFERENCES pets(id),
     FOREIGN KEY (idShelter) REFERENCES shelters(idShelter)
