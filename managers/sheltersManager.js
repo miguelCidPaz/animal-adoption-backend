@@ -31,6 +31,19 @@ class sheltersManager {
         }
     }
 
+    static async login(data) {
+        console.log(data)
+        const query = `SELECT FROM shelters WHERE idshelter='${data.id}' AND pass='${data.pass}'`
+        try {
+            const shelters = await adoptionClient.query(query);
+            console.log(shelters.rows)
+            return shelters.rows.length > 0 ? true : false
+        } catch (e) {
+            console.log(e)
+            return false
+        }
+    }
+
     //Delete pass for security
     static #securize(data) {
         for (let item of data) {

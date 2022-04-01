@@ -41,7 +41,7 @@ function format(info) {
 
 class PetsManager {
   static async getAllPets() {
-    const pets = await adoptionClient.query(`SELECT * FROM Pets;`);
+    const pets = await adoptionClient.query(`SELECT * FROM pets;`);
     const formattedInfo = format(pets.rows);
     return formattedInfo.map((pet) => {
       return new Pet(pet);
@@ -50,7 +50,7 @@ class PetsManager {
 
   static async getById(id) {
     const pet = await adoptionClient.query(
-      `SELECT * FROM Pets WHERE id = '${id}';`
+      `SELECT * FROM pets WHERE id = '${id}';`
     );
     const formattedInfo = format(pet.rows);
     if (formattedInfo) {
@@ -120,13 +120,24 @@ class PetsManager {
     }*/
   }
 
-  static async insertPet(data) {
-    const query = `INSERT INTO pets(name, size, gender, weightkg, rescuedat, birthday, species, images, description)
+  static async insertPet(AllInfo) {
+
+    const info = AllInfo[0]
+    const data = AllInfo[1]
+
+    const query0 = 'SELECT * FROM pets'
+
+    const query1 = `INSERT INTO pets(name, size, gender, weightkg, rescuedat, birthday, species, images, description)
     VALUES('${data.name}', '${data.size}', '${data.gender}', '${data.weightkg}', '${data.rescuedat}', '${data.birthday}', 
     '${data.species}', '${data.images}', '${data.description}')`
 
     try {
-      await adoptionClient.query(query);
+      const allPetsWithoutOne = await adoptionClient.query(query0);
+      await adoptionClient.query(query1);
+      const allPets = await adoptionClient.query(query0);
+      const myPet = this.#discriminePets(allPetsWithoutOne.rows, allPets.rows)
+      await adoptionClient.query(`INSERT INTO bailouts(idpet, idshelter, phone, email, appreciations, approbe)
+      VALUES('${myPet.id}', '${info.nameShelter}', '${info.phone}', '${info.email}', '${info.observations}', '${1}')`)
       return true
     } catch (e) {
       console.error(e)
@@ -158,6 +169,17 @@ class PetsManager {
       }
     }
     return selectedWeight
+  }
+
+  static #discriminePets(arr1, arr2) {
+    let result = {};
+    for (let finalPet of arr2) {
+      if (!arr1.includes(finalPet)) {
+        result = finalPet
+        break;
+      }
+    }
+    return result
   }
 }
 
