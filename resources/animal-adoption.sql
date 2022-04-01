@@ -1,32 +1,40 @@
+/* //size SMALLINT, /1=SMALL // 2=MEDIUM // 3=BIG/
+//gender SMALLINT /1=MALE // 2=FEMALE/,
+//species SMALLINT/1=DOG // 2=CAT/,
+//images VARCHAR(255), /url1.com, url2.com/ */
 
 CREATE TABLE pets(
     id uuid DEFAULT uuid_generate_v4 (),
     name varchar(255) NOT NULL,
-    size SMALLINT, /1=SMALL // 2=MEDIUM // 3=BIG/
-    gender SMALLINT /1=MALE // 2=FEMALE/,
+    size SMALLINT, 
+    gender SMALLINT,
     weightKg INT,
     rescuedAt DATE,
     birthday DATE,
-    species SMALLINT/1=DOG // 2=CAT/,
-    images VARCHAR(255), /url1.com, url2.com/
+    species SMALLINT,
+    images VARCHAR(255),
     description varchar(255),
     PRIMARY KEY (id)
 );
+
+/* personalId VARCHAR(10) NOT NULL UNIQUE, /DNI/ */
 
 CREATE TABLE adopters (
     id uuid DEFAULT uuid_generate_v4 (),
     name VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
     age INT NOT NULL,
-    personalId VARCHAR(10) NOT NULL UNIQUE, /DNI/
+    personalId VARCHAR(10) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
+
+/* adoptionStatus SMALLINT, /1=FREE, 2=RESERVED, 3=ADOPTED/ */
 
 CREATE TABLE state_adoption (
     id uuid DEFAULT uuid_generate_v4 (),
     idPet uuid,
     idAdopter uuid,
-    adoptionStatus SMALLINT, /1=FREE, 2=RESERVED, 3=ADOPTED/
+    adoptionStatus SMALLINT,
     PRIMARY KEY (id),
     FOREIGN KEY (idPet) REFERENCES pets(Id),
     FOREIGN KEY (idAdopter) REFERENCES adopters(Id)

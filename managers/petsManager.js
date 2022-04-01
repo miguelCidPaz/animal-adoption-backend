@@ -89,35 +89,6 @@ class PetsManager {
       pets = format(pets.rows);
       return pets
     }
-
-
-
-    /* let sql = "";
-    const lastEntry = Object.entries(criteria).length - 1;
-
-    Object.entries(criteria).forEach(([key, value], index) => {
-      let operator = "=";
-      if (key.includes(".")) {
-        let symbol = key.slice(key.indexOf(".") + 1, key.length);
-        operator = symbol == "gt" ? ">=" : "<=";
-        key = key.slice(0, key.indexOf("."));
-      }
-      if (lastEntry > index) {
-        sql += `${key} ${operator} '${value}' AND `;
-      } else {
-        sql += `${key} ${operator} '${value}' `;
-      }
-    });
-
-    const pets = await adoptionClient.query(`SELECT * FROM Pets WHERE ${sql}`);
-    const formattedInfo = format(pets.rows);
-    if (formattedInfo) {
-      return formattedInfo.map((petData) => {
-        return new Pet(petData);
-      });
-    } else {
-      return undefined;
-    }*/
   }
 
   static async insertPet(AllInfo) {
