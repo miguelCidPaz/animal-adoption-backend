@@ -82,7 +82,8 @@ class PetsManager {
       }
       return response
     } else {
-      criteria.name.charAt(0).toUpperCase();
+      const firstLetter = criteria.name.charAt(0).toUpperCase();
+      criteria.name = firstLetter + criteria.name.slice(1)
       const normalizeName = criteria.name
       const query = `SELECT * FROM pets WHERE name='${normalizeName}'`
       let pets = await adoptionClient.query(query)
