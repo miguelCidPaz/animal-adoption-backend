@@ -39,3 +39,25 @@ CREATE TABLE state_adoption (
     FOREIGN KEY (idPet) REFERENCES pets(Id),
     FOREIGN KEY (idAdopter) REFERENCES adopters(Id)
 );
+
+CREATE TABLE bailouts (
+    idRescue uuid DEFAULT uuid_generate_v4 (),
+    idPet uuid,
+    idShelter uuid,
+    phone VARCHAR(30),
+    email VARCHAR(100),
+    appreciations VARCHAR(255),
+    approbe SMALLINT, /0=UNAUTHORIZED, 1=AUTHORIZED/
+    PRIMARY KEY (idRescue),
+    FOREIGN KEY (idPet) REFERENCES pets(id),
+    FOREIGN KEY (idShelter) REFERENCES shelters(idShelter)
+);
+
+CREATE TABLE shelters (
+    idShelter uuid DEFAULT uuid_generate_v4 (),
+    nameShelter VARCHAR(50),
+    pass VARCHAR(50),
+    phone VARCHAR(30) UNIQUE,
+    email VARCHAR(100) UNIQUE,
+    PRIMARY KEY (idShelter)
+);

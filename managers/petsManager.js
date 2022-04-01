@@ -41,8 +41,8 @@ function format(info) {
 
 class PetsManager {
   static async getAllPets() {
-    const pets = await adoptionClient.query(`SELECT * FROM Pets;`);
-    const formattedInfo = format(pets.rows);    
+    const pets = await adoptionClient.query(`SELECT * FROM pets;`);
+    const formattedInfo = format(pets.rows);
     return formattedInfo.map((pet) => {
       return new Pet(pet);
     });
@@ -50,7 +50,7 @@ class PetsManager {
 
   static async getById(id) {
     const pet = await adoptionClient.query(
-      `SELECT * FROM Pets WHERE id = '${id}';`
+      `SELECT * FROM pets WHERE id = '${id}';`
     );
     const formattedInfo = format(pet.rows);
     if (formattedInfo) {
@@ -60,34 +60,97 @@ class PetsManager {
     }
   }
 
-  static async getByCriteria(criteria = {}) {
-    console.log('kkk')
-    let sql = "";
-    const lastEntry = Object.entries(criteria).length - 1;
+  static async getByCriteria(criteria) {
+    if (Array.isArray(criteria)) {
+      //😡I collect all the pets😡
+      const pets = await adoptionClient.query('SELECT * FROM pets');
 
-    Object.entries(criteria).forEach(([key, value], index) => {
-      let operator = "=";
-      if (key.includes(".")) {
-        let symbol = key.slice(key.indexOf(".") + 1, key.length);
-        operator = symbol == "gt" ? ">=" : "<=";
-        key = key.slice(0, key.indexOf("."));
-      }
-      if (lastEntry > index) {
-        sql += `${key} ${operator} '${value}' AND `;
-      } else {
-        sql += `${key} ${operator} '${value}' `;
-      }
-    });
+      //I format them☠️☠️☠️
+      const formattedInfo = format(pets.rows);
 
-    const pets = await adoptionClient.query(`SELECT * FROM Pets WHERE ${sql}`);
-    const formattedInfo = format(pets.rows);
-    if (formattedInfo) {
-      return formattedInfo.map((petData) => {
-        return new Pet(petData);
-      });
+      //I divide the criteria to treat them one by one 😈😈😈
+      const species = this.#getSpecies(criteria);
+      const sizes = this.#getSizes(criteria);
+      const weight = this.#getWeight(criteria);
+
+      const response = [];
+      for (let pet of formattedInfo) {
+        //Returns a boolean depending on whether these specifications are met 😙😙😙
+        const specieAndSize = species.includes(pet.species) && sizes.includes(pet.size)
+        const andWeight = pet.weightkg >= weight[0] && pet.weightkg <= weight[1];
+        if (specieAndSize && andWeight) response.push(pet)
+      }
+      return response
     } else {
-      return undefined;
+      criteria.name.charAt(0).toUpperCase();
+      const normalizeName = criteria.name
+      const query = `SELECT * FROM pets WHERE name='${normalizeName}'`
+      let pets = await adoptionClient.query(query)
+      pets = format(pets.rows);
+      return pets
     }
+  }
+
+  static async insertPet(AllInfo) {
+
+    const info = AllInfo[0]
+    const data = AllInfo[1]
+
+    const query0 = 'SELECT * FROM pets'
+
+    const query1 = `INSERT INTO pets(name, size, gender, weightkg, rescuedat, birthday, species, images, description)
+    VALUES('${data.name}', '${data.size}', '${data.gender}', '${data.weightkg}', '${data.rescuedat}', '${data.birthday}', 
+    '${data.species}', '${data.images}', '${data.description}')`
+
+    try {
+      const allPetsWithoutOne = await adoptionClient.query(query0);
+      await adoptionClient.query(query1);
+      const allPets = await adoptionClient.query(query0);
+      const myPet = this.#discriminePets(allPetsWithoutOne.rows, allPets.rows)
+      await adoptionClient.query(`INSERT INTO bailouts(idpet, idshelter, phone, email, appreciations, approbe)
+      VALUES('${myPet.id}', '${info.nameShelter}', '${info.phone}', '${info.email}', '${info.observations}', '${1}')`)
+      return true
+    } catch (e) {
+      console.error(e)
+      return false
+    }
+  }
+
+  static #getSpecies(criteria) {
+    const selectedSpecies = [];
+    for (let condition of criteria) {
+      if (condition[0] === 'Dog' || condition[0] === 'Cat') selectedSpecies.push(condition[0])
+    }
+    return selectedSpecies
+  }
+
+  static #getSizes(criteria) {
+    const selectedSizes = [];
+    for (let condition of criteria) {
+      if (condition[0] === 'Small' || condition[0] === 'Medium' || condition[0] === 'Large') selectedSizes.push(condition[0])
+    }
+    return selectedSizes
+  }
+
+  static #getWeight(criteria) {
+    let selectedWeight = []
+    for (let condition of criteria) {
+      if (Array.isArray(condition[1])) {
+        selectedWeight = condition[1]
+      }
+    }
+    return selectedWeight
+  }
+
+  static #discriminePets(arr1, arr2) {
+    let result = {};
+    for (let finalPet of arr2) {
+      if (!arr1.includes(finalPet)) {
+        result = finalPet
+        break;
+      }
+    }
+    return result
   }
 }
 
