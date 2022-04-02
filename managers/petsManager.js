@@ -44,7 +44,6 @@ class PetsManager {
 
     try {
       const allLockeds = await adoptionClient.query('SELECT * FROM bailouts WHERE approbe=0')
-      console.log(allLockeds.rows)
       const allLockedIds = allLockeds.rows.map(e => e.idpet)
       const allPets = await adoptionClient.query(`SELECT * FROM pets`);
       let myPets = allPets.rows.filter(e => {
