@@ -41,11 +41,23 @@ function format(info) {
 
 class PetsManager {
   static async getAllPets() {
-    const pets = await adoptionClient.query(`SELECT * FROM pets;`);
-    const formattedInfo = format(pets.rows);
-    return formattedInfo.map((pet) => {
-      return new Pet(pet);
-    });
+
+    try {
+      const allLockeds = await adoptionClient.query('SELECT * FROM bailouts')
+      const allLockedIds = allLockeds.rows.filter(e => {
+        if (e.approbe === 0) return e.idpet
+      })
+      const allPets = await adoptionClient.query(`SELECT * FROM pets`);
+      const myPets = format(allPets.rows.filter(e => {
+        if (!allLockedIds.includes(e.id)) return e
+      }))
+
+      return myPets
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+
   }
 
   static async getById(id) {
@@ -115,6 +127,28 @@ class PetsManager {
       console.error(e)
       return false
     }
+  }
+
+  //Call all pets locked
+  static async getAllLockedPets() {
+
+    try {
+      const allPetsLocked = await adoptionClient.query('SELECT * FROM bailouts');
+      const allLockedIds = allPetsLocked.rows.filter(e => {
+        if (e.approbe === 0) {
+          return e.idpet
+        }
+      })
+      const allPets = await adoptionClient.query('SELECT * FROM pets')
+      const myPets = allPets.rows.filter(e => {
+        if (allLockedIds.includes(e.id)) return e
+      })
+      return myPets
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+
   }
 
   static #getSpecies(criteria) {
