@@ -43,14 +43,15 @@ class PetsManager {
   static async getAllPets() {
 
     try {
-      const allLockeds = await adoptionClient.query('SELECT * FROM bailouts')
-      const allLockedIds = allLockeds.rows.filter(e => {
-        if (e.approbe === 0) return e.idpet
-      })
+      const allLockeds = await adoptionClient.query('SELECT * FROM bailouts WHERE approbe=0')
+      console.log(allLockeds.rows)
+      const allLockedIds = allLockeds.rows.map(e => e.idpet)
       const allPets = await adoptionClient.query(`SELECT * FROM pets`);
-      const myPets = format(allPets.rows.filter(e => {
+      let myPets = allPets.rows.filter(e => {
         if (!allLockedIds.includes(e.id)) return e
-      }))
+      })
+
+      myPets = format(myPets)
 
       return myPets
     } catch (e) {
@@ -133,16 +134,13 @@ class PetsManager {
   static async getAllLockedPets() {
 
     try {
-      const allPetsLocked = await adoptionClient.query('SELECT * FROM bailouts');
-      const allLockedIds = allPetsLocked.rows.filter(e => {
-        if (e.approbe === 0) {
-          return e.idpet
-        }
-      })
+      const allPetsLocked = await adoptionClient.query('SELECT * FROM bailouts WHERE approbe=0');
+      const allLockedIds = allPetsLocked.rows.map(e => e.idpet)
       const allPets = await adoptionClient.query('SELECT * FROM pets')
-      const myPets = allPets.rows.filter(e => {
+      let myPets = allPets.rows.filter(e => {
         if (allLockedIds.includes(e.id)) return e
       })
+      myPets = format(myPets)
       return myPets
     } catch (e) {
       console.error(e)
@@ -206,12 +204,13 @@ class PetsManager {
 
   static #discriminePets(arr1, arr2) {
     let result = {};
+    let arr1Ids = arr2.filter(e => e.id)
     for (let finalPet of arr2) {
-      if (!arr1.includes(finalPet)) {
+      if (!arr1Ids.includes(finalPet.id)) {
         result = finalPet
-        break;
       }
     }
+
     return result
   }
 }
