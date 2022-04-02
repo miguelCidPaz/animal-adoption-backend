@@ -121,7 +121,7 @@ class PetsManager {
       const allPets = await adoptionClient.query(query0);
       const myPet = this.#discriminePets(allPetsWithoutOne.rows, allPets.rows)
       await adoptionClient.query(`INSERT INTO bailouts(idpet, idshelter, phone, email, appreciations, approbe)
-      VALUES('${myPet.id}', '${info.nameShelter}', '${info.phone}', '${info.email}', '${info.observations}', '${0}')`)
+      VALUES('${myPet.id}', '${info.nameShelter}', '${info.phone}', '${info.email}', '${info.observations}', '${1}')`)
       return true
     } catch (e) {
       console.error(e)
