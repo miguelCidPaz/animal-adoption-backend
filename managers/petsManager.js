@@ -121,7 +121,7 @@ class PetsManager {
       const allPets = await adoptionClient.query(query0);
       const myPet = this.#discriminePets(allPetsWithoutOne.rows, allPets.rows)
       await adoptionClient.query(`INSERT INTO bailouts(idpet, idshelter, phone, email, appreciations, approbe)
-      VALUES('${myPet.id}', '${info.nameShelter}', '${info.phone}', '${info.email}', '${info.observations}', '${1}')`)
+      VALUES('${myPet.id}', '${info.nameShelter}', '${info.phone}', '${info.email}', '${info.observations}', '${0}')`)
       return true
     } catch (e) {
       console.error(e)
@@ -147,6 +147,33 @@ class PetsManager {
     } catch (e) {
       console.error(e)
       return []
+    }
+
+  }
+
+  static async unlockPet(id) {
+    const query = `UPDATE bailouts 
+    SET approbed = '${0}' 
+    WHERE idpet = '${id}'`
+
+    try {
+      await adoptionClient.query(query);
+      return true
+    } catch (e) {
+      console.error(e)
+      return false
+    }
+
+  }
+
+  static async deletePet(id) {
+    const query = `DELETE FROM pets WHERE id='${id}'`
+
+    try {
+      await adoptionClient.query(query);
+      return true
+    } catch (e) {
+      return false
     }
 
   }
