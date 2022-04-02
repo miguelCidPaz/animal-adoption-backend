@@ -24,13 +24,12 @@ function format(info) {
 class ReservationManager {
   static async createReservation(body, petId) {
     let isPetAvailable = true;
-    console.log("funciona");
 
     try {
       const petStatusQuery = await adoptionClient.query(
         `SELECT adoptionStatus FROM state_adoption WHERE idpet = '${petId}'`
       );
-      console.log(petStatusQuery);
+
       if (petStatusQuery.rows[0] && petStatusQuery.rows[0].adoptionstatus === 1) {
         isPetAvailable = false;
       }
@@ -38,19 +37,20 @@ class ReservationManager {
       throw (error);
     }
     if (isPetAvailable) {
+
       const insertAdopterResponse = await adoptionClient.query(
         `SELECT * FROM adopters WHERE personalid='${body.personalID}'`
       );
-      console.log('COMPROBANDO ID')
-      console.log(insertAdopterResponse)
+
       const idAdopter = insertAdopterResponse.rows[0].id;
       await adoptionClient.query(
         `INSERT INTO state_adoption (idpet, idadopter, adoptionstatus)VALUES('${petId}', '${idAdopter}', 1)`
       );
+
       const reservation = await adoptionClient.query(
         `SELECT * FROM state_adoption WHERE idpet = '${petId}'`
       )
-      console.log(reservation.rows, 'estoy aqui');
+
       return new Reservation(reservation.rows[0]);
     } else return { message: "Pet Not Available" };
   }
@@ -61,9 +61,7 @@ class ReservationManager {
       getReservation = await adoptionClient.query(
         `SELECT * FROM state_adoption`
       );
-      /*       if (getReservation.rows[0] === undefined) {
-              return undefined;
-            } */
+
       const formattedInfo = format(getReservation.rows);
       return formattedInfo.map((info => { return new Reservation(info) }))
 

@@ -41,11 +41,23 @@ function format(info) {
 
 class PetsManager {
   static async getAllPets() {
-    const pets = await adoptionClient.query(`SELECT * FROM pets;`);
-    const formattedInfo = format(pets.rows);
-    return formattedInfo.map((pet) => {
-      return new Pet(pet);
-    });
+
+    try {
+      const allLockeds = await adoptionClient.query('SELECT * FROM bailouts WHERE approbe=0')
+      const allLockedIds = allLockeds.rows.map(e => e.idpet)
+      const allPets = await adoptionClient.query(`SELECT * FROM pets`);
+      let myPets = allPets.rows.filter(e => {
+        if (!allLockedIds.includes(e.id)) return e
+      })
+
+      myPets = format(myPets)
+
+      return myPets
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+
   }
 
   static async getById(id) {
@@ -109,12 +121,58 @@ class PetsManager {
       const allPets = await adoptionClient.query(query0);
       const myPet = this.#discriminePets(allPetsWithoutOne.rows, allPets.rows)
       await adoptionClient.query(`INSERT INTO bailouts(idpet, idshelter, phone, email, appreciations, approbe)
-      VALUES('${myPet.id}', '${info.nameShelter}', '${info.phone}', '${info.email}', '${info.observations}', '${1}')`)
+      VALUES('${myPet.id}', '${info.nameShelter}', '${info.phone}', '${info.email}', '${info.observations}', '${0}')`)
       return true
     } catch (e) {
       console.error(e)
       return false
     }
+  }
+
+  //Call all pets locked
+  static async getAllLockedPets() {
+
+    try {
+      const allPetsLocked = await adoptionClient.query('SELECT * FROM bailouts WHERE approbe=0');
+      const allLockedIds = allPetsLocked.rows.map(e => e.idpet)
+      const allPets = await adoptionClient.query('SELECT * FROM pets')
+      let myPets = allPets.rows.filter(e => {
+        if (allLockedIds.includes(e.id)) return e
+      })
+      myPets = format(myPets)
+      return myPets
+    } catch (e) {
+      console.error(e)
+      return []
+    }
+
+  }
+
+  static async unlockPet(id) {
+    const query = `UPDATE bailouts 
+    SET approbed = '${0}' 
+    WHERE idpet = '${id}'`
+
+    try {
+      await adoptionClient.query(query);
+      return true
+    } catch (e) {
+      console.error(e)
+      return false
+    }
+
+  }
+
+  static async deletePet(id) {
+    const query = `DELETE FROM pets WHERE id='${id}'`
+
+    try {
+      await adoptionClient.query(query);
+      return true
+    } catch (e) {
+      return false
+    }
+
   }
 
   static #getSpecies(criteria) {
@@ -145,12 +203,13 @@ class PetsManager {
 
   static #discriminePets(arr1, arr2) {
     let result = {};
+    let arr1Ids = arr2.filter(e => e.id)
     for (let finalPet of arr2) {
-      if (!arr1.includes(finalPet)) {
+      if (!arr1Ids.includes(finalPet.id)) {
         result = finalPet
-        break;
       }
     }
+
     return result
   }
 }
